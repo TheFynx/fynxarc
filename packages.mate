@@ -1,0 +1,24 @@
+## Mate Specific
+caja
+marco
+mate-control-center
+mate-desktop
+mate-icon-theme
+mate-menus
+mate-notification-daemon
+mate-panel
+mate-polkit
+mate-session-manager
+mate-settings-daemon
+mate-themes
+mate-user-guide
+mate-backgrounds
+mate-extra
+
+qt5ct
+
+## Namib Specific
+namib-mate-settings
+xcursor-breeze
+namib-settings-manager-notifier
+brisk-menu
