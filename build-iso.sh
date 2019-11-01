@@ -5,26 +5,25 @@ rm -rf /var/cache/pacman/pkg/*
 pacman-key --init
 pacman-key --populate
 
-
 set -e -u
 
-iso_name=fynxarc-mate
-iso_label="FYNXARC$(date +%y%m)"
-iso_publisher="Fynxarc GNU/Linux <https://www.fynxarclinux.org/>"
-iso_application="Fynxarc GNU/Linux Live/Rescue CD"
-iso_version=$(date +%y%m)
-install_dir=arch
-work_dir=work
-out_dir=out
-gpg_key=
+: ${desktop:=cinnamon}
+: ${iso_name:=fynxarc-${desktop}}
+: ${iso_label:="FYNXARC$(date +%y%m)"}
+: ${iso_publisher:="Fynxarc GNU/Linux <https://www.fynxlabs.com/>"}
+: ${iso_application:="Fynxarc GNU/Linux Live/Rescue CD"}
+: ${iso_version:=$(date +%y%m)}
+: ${install_dir:=arch}
+: ${work_dir:=work}
+: ${out_dir:=out}
+: ${gpg_key:=""}
 
-verbose=""
-script_path=$(readlink -f ${0%/*})
+: ${verbose:=""}
+: ${script_path:=$(readlink -f ${0%/*})}
 
 umask 0022
 
-_usage ()
-{
+_usage() {
     echo "usage ${0} [options]"
     echo
     echo " General options:"
@@ -44,6 +43,8 @@ _usage ()
     echo "                        Default: ${work_dir}"
     echo "    -o <out_dir>       Set the output directory"
     echo "                        Default: ${out_dir}"
+    echo "    -d <desktop>       Set the desktop environment to build; cinnamon, kde, gnone, budgie, mate, xfce"
+    echo "                        Default: ${desktop}"
     echo "    -v                 Enable verbose output"
     echo "    -h                 This help message"
     exit ${1}
@@ -61,7 +62,7 @@ run_once() {
 make_pacman_conf() {
     local _cache_dirs
     _cache_dirs=($(pacman -v 2>&1 | grep '^Cache Dirs:' | sed 's/Cache Dirs:\s*//g'))
-    sed -r "s|^#?\\s*CacheDir.+|CacheDir = $(echo -n ${_cache_dirs[@]})|g" ${script_path}/pacman.conf > ${work_dir}/pacman.conf
+    sed -r "s|^#?\\s*CacheDir.+|CacheDir = $(echo -n ${_cache_dirs[@]})|g" ${script_path}/pacman.conf >${work_dir}/pacman.conf
 }
 
 # Base installation, plus needed packages (airootfs)
@@ -72,7 +73,35 @@ make_basefs() {
 
 # Additional packages (airootfs)
 make_packages() {
-    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -p "$(grep -h -v ^# ${script_path}/packages.{both,mate})" install
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -p "$(grep -h -v ^# ${script_path}/packages.{both,${desktop}})" install
+}
+
+install_calamares() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_calamares.sh run
+}
+
+install_yay() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_yay.sh run
+}
+
+install_aur_packages() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_aur_packages.sh run
+}
+
+install_dconf_config() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_dconf_config.sh run
+}
+
+install_fonts() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_fonts.sh run
+}
+
+install_game_support() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_game_support.sh run
+}
+
+install_ldac() {
+    mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r /opt/custom/install_ldac.sh run
 }
 
 # Copy mkinitcpio archiso hooks and build initramfs (airootfs)
@@ -90,12 +119,12 @@ make_setup_mkinitcpio() {
     cp ${script_path}/mkinitcpio.conf ${work_dir}/x86_64/airootfs/etc/mkinitcpio-archiso.conf
     gnupg_fd=
     if [[ ${gpg_key} ]]; then
-      gpg --export ${gpg_key} >${work_dir}/gpgkey
-      exec 17<>${work_dir}/gpgkey
+        gpg --export ${gpg_key} >${work_dir}/gpgkey
+        exec 17<>${work_dir}/gpgkey
     fi
     ARCHISO_GNUPG_FD=${gpg_key:+17} mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r 'mkinitcpio -c /etc/mkinitcpio-archiso.conf -k /boot/vmlinuz-linux -g /boot/archiso.img' run
     if [[ ${gpg_key} ]]; then
-      exec 17<&-
+        exec 17<&-
     fi
 }
 
@@ -107,7 +136,7 @@ make_customize_airootfs() {
 
     curl -o ${work_dir}/x86_64/airootfs/etc/pacman.d/mirrorlist 'https://www.archlinux.org/mirrorlist/?country=all&protocol=http&use_mirror_status=on'
 
-    lynx -dump -nolist 'https://wiki.archlinux.org/index.php/Installation_Guide?action=render' >> ${work_dir}/x86_64/airootfs/root/install.txt
+    lynx -dump -nolist 'https://wiki.archlinux.org/index.php/Installation_Guide?action=render' >>${work_dir}/x86_64/airootfs/root/install.txt
 
     mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r '/root/customize_airootfs.sh' run
     rm ${work_dir}/x86_64/airootfs/root/customize_airootfs.sh
@@ -132,25 +161,25 @@ make_boot_extra() {
 
 # Prepare /${install_dir}/boot/syslinux
 make_syslinux() {
-    _uname_r=$(file -b ${work_dir}/x86_64/airootfs/boot/vmlinuz-linux| awk 'f{print;f=0} /version/{f=1}' RS=' ')
+    _uname_r=$(file -b ${work_dir}/x86_64/airootfs/boot/vmlinuz-linux | awk 'f{print;f=0} /version/{f=1}' RS=' ')
     mkdir -p ${work_dir}/iso/${install_dir}/boot/syslinux
     for _cfg in ${script_path}/syslinux/*.cfg; do
         sed "s|%ARCHISO_LABEL%|${iso_label}|g;
-             s|%INSTALL_DIR%|${install_dir}|g" ${_cfg} > ${work_dir}/iso/${install_dir}/boot/syslinux/${_cfg##*/}
+             s|%INSTALL_DIR%|${install_dir}|g" ${_cfg} >${work_dir}/iso/${install_dir}/boot/syslinux/${_cfg##*/}
     done
     cp ${script_path}/syslinux/splash.png ${work_dir}/iso/${install_dir}/boot/syslinux
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/*.c32 ${work_dir}/iso/${install_dir}/boot/syslinux
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/lpxelinux.0 ${work_dir}/iso/${install_dir}/boot/syslinux
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/memdisk ${work_dir}/iso/${install_dir}/boot/syslinux
     mkdir -p ${work_dir}/iso/${install_dir}/boot/syslinux/hdt
-    gzip -c -9 ${work_dir}/x86_64/airootfs/usr/share/hwdata/pci.ids > ${work_dir}/iso/${install_dir}/boot/syslinux/hdt/pciids.gz
-    gzip -c -9 ${work_dir}/x86_64/airootfs/usr/lib/modules/${_uname_r}/modules.alias > ${work_dir}/iso/${install_dir}/boot/syslinux/hdt/modalias.gz
+    gzip -c -9 ${work_dir}/x86_64/airootfs/usr/share/hwdata/pci.ids >${work_dir}/iso/${install_dir}/boot/syslinux/hdt/pciids.gz
+    gzip -c -9 ${work_dir}/x86_64/airootfs/usr/lib/modules/${_uname_r}/modules.alias >${work_dir}/iso/${install_dir}/boot/syslinux/hdt/modalias.gz
 }
 
 # Prepare /isolinux
 make_isolinux() {
     mkdir -p ${work_dir}/iso/isolinux
-    sed "s|%INSTALL_DIR%|${install_dir}|g" ${script_path}/isolinux/isolinux.cfg > ${work_dir}/iso/isolinux/isolinux.cfg
+    sed "s|%INSTALL_DIR%|${install_dir}|g" ${script_path}/isolinux/isolinux.cfg >${work_dir}/iso/isolinux/isolinux.cfg
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/isolinux.bin ${work_dir}/iso/isolinux/
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/isohdpfx.bin ${work_dir}/iso/isolinux/
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/ldlinux.c32 ${work_dir}/iso/isolinux/
@@ -171,7 +200,7 @@ make_efi() {
 
     sed "s|%ARCHISO_LABEL%|${iso_label}|g;
          s|%INSTALL_DIR%|${install_dir}|g" \
-        ${script_path}/efiboot/loader/entries/archiso-x86_64-usb.conf > ${work_dir}/iso/loader/entries/archiso-x86_64.conf
+        ${script_path}/efiboot/loader/entries/archiso-x86_64-usb.conf >${work_dir}/iso/loader/entries/archiso-x86_64.conf
 
     # EFI Shell 2.0 for UEFI 2.3+
     curl -o ${work_dir}/iso/EFI/shellx64_v2.efi https://raw.githubusercontent.com/tianocore/edk2/master/ShellBinPkg/UefiShell/X64/Shell.efi
@@ -207,7 +236,7 @@ make_efiboot() {
 
     sed "s|%ARCHISO_LABEL%|${iso_label}|g;
          s|%INSTALL_DIR%|${install_dir}|g" \
-        ${script_path}/efiboot/loader/entries/archiso-x86_64-cd.conf > ${work_dir}/efiboot/loader/entries/archiso-x86_64.conf
+        ${script_path}/efiboot/loader/entries/archiso-x86_64-cd.conf >${work_dir}/efiboot/loader/entries/archiso-x86_64.conf
 
     cp ${work_dir}/iso/EFI/shellx64_v2.efi ${work_dir}/efiboot/EFI/
     cp ${work_dir}/iso/EFI/shellx64_v1.efi ${work_dir}/efiboot/EFI/
@@ -234,38 +263,67 @@ if [[ ${EUID} -ne 0 ]]; then
     _usage 1
 fi
 
-while getopts 'N:V:L:P:A:D:w:o:g:vh' arg; do
+while getopts 'N:V:L:P:A:D:w:o:g:d:vh' arg; do
     case "${arg}" in
-        N) iso_name="${OPTARG}" ;;
-        V) iso_version="${OPTARG}" ;;
-        L) iso_label="${OPTARG}" ;;
-        P) iso_publisher="${OPTARG}" ;;
-        A) iso_application="${OPTARG}" ;;
-        D) install_dir="${OPTARG}" ;;
-        w) work_dir="${OPTARG}" ;;
-        o) out_dir="${OPTARG}" ;;
-        g) gpg_key="${OPTARG}" ;;
-        v) verbose="-v" ;;
-        h) _usage 0 ;;
-        *)
-           echo "Invalid argument '${arg}'"
-           _usage 1
-           ;;
+    N) iso_name="${OPTARG}" ;;
+    V) iso_version="${OPTARG}" ;;
+    L) iso_label="${OPTARG}" ;;
+    P) iso_publisher="${OPTARG}" ;;
+    A) iso_application="${OPTARG}" ;;
+    D) install_dir="${OPTARG}" ;;
+    w) work_dir="${OPTARG}" ;;
+    o) out_dir="${OPTARG}" ;;
+    g) gpg_key="${OPTARG}" ;;
+    d) desktop="${OPTARG}" ;;
+    v) verbose="-v" ;;
+    h) _usage 0 ;;
+    *)
+        echo "Invalid argument '${arg}'"
+        _usage 1
+        ;;
     esac
 done
 
 mkdir -p ${work_dir}
 
+echo ">> Starting Pacman Conf"
 run_once make_pacman_conf
+echo ">> Starting Base FS"
 run_once make_basefs
+echo ">> Starting Packages"
 run_once make_packages
+echo ">> Starting mkinitcpio"
 run_once make_setup_mkinitcpio
+echo ">> Starting Customize Airootfs"
 run_once make_customize_airootfs
+echo ">> Starting Custom"
+echo ">> Starting Calamares"
+run_once install_calamares
+echo ">> Starting Yay"
+run_once install_yay
+echo ">> Starting AUR Packages"
+run_once install_aur_packages
+echo ">> Starting Fonts"
+run_once install_fonts
+echo ">> Starting Game Support"
+run_once install_game_support
+echo ">> Starting LDAC"
+run_once install_ldac
+echo ">> Starting DCONF"
+run_once install_dconf_config
+echo ">> Starting Boot"
 run_once make_boot
+echo ">> Starting Boot Extra"
 run_once make_boot_extra
+echo ">> Starting Syslinux"
 run_once make_syslinux
+echo ">> Starting Isolinux"
 run_once make_isolinux
+echo ">> Starting EFI"
 run_once make_efi
+echo ">> Starting EFI Boot"
 run_once make_efiboot
+echo ">> Starting Prepare"
 run_once make_prepare
+echo ">> Starting ISO"
 run_once make_iso

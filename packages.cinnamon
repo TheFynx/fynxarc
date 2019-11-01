@@ -1,14 +1,11 @@
-## Gnome Specific
+#################
+# Gnome Specific
+#################
 cinnamon
 cinnamon-translations
 xed
-xviewer
-xviewer-plugins
-pix
 xreader
-
 adwaita-icon-theme
-gnome-backgrounds
 gnome-calculator
 gnome-keyring
 gnome-screenshot
@@ -19,6 +16,8 @@ nemo-preview
 gnome-control-center
 gnome-power-manager
 gnome-disk-utility
+gnome-calculator
+dconf
 gvfs
 gvfs-afc
 gvfs-goa
@@ -31,8 +30,3 @@ networkmanager
 simple-scan
 xdg-user-dirs-gtk
 qt5ct
-
-## Namib Specific
-namib-cinnamon-settings
-xcursor-breeze
-namib-settings-manager-notifier

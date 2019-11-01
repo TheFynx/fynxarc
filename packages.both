@@ -1,32 +1,43 @@
-####################
+######################
 ## FynxArc Specific ##
-####################
+######################
 
-## Base System
+##############
+# Base System
+##############
 base
 base-devel
 
-## Kernel
+#########
+# Kernel
+#########
 linux
 linux-headers
 linux-firmware
 
-## Grub Bootloader
+##################
+# Grub Bootloader
+##################
 grub
 os-prober
 
-## GPG Keys
+###########
+# GPG Keys
+###########
 archlinux-keyring
 
-## Audio
+########
+# Audio
+########
 alsa-utils
 lib32-alsa-plugins
 pulseaudio
 pulseaudio-alsa
 
-## Common
+#########
+# Common
+#########
 pacman-mirrorlist
-mkinitcpio-openswap
 tlp
 bash-completion
 bind-tools
@@ -50,7 +61,9 @@ laptop-detect
 wipe
 lsb-release
 
-## Fynx Additions
+#################
+# Fynx Additions
+#################
 bzip2
 curl
 git
@@ -58,14 +71,18 @@ jq
 libu2f-host
 neovim
 terminator
-tree
+tree 
 vim
 xclip
 
-## Firmware
+###########
+# Firmware
+###########
 intel-ucode
 
-## Archive Tools
+################
+# Archive Tools
+################
 tar
 unzip
 gzip
@@ -74,7 +91,9 @@ xz
 zip
 p7zip
 
-## Network
+##########
+# Network
+##########
 crda
 net-tools
 networkmanager
@@ -87,9 +106,10 @@ pulseaudio-bluetooth
 bluez
 bluez-utils
 broadcom-wl-dkms
-b43-firmware
 
-## Fonts
+########
+# Fonts
+########
 ttf-dejavu
 ttf-liberation
 ttf-linux-libertine
@@ -99,7 +119,9 @@ ttf-ubuntu-font-family
 adobe-source-code-pro-fonts
 gnu-free-fonts
 
-## XORG Server
+##############
+# XORG Server
+##############
 xf86-input-keyboard
 xf86-input-vmmouse
 xf86-input-mouse
@@ -125,7 +147,9 @@ mesa-libgl
 mesa-vdpau
 lib32-mesa-libgl
 
-## Codecs
+#########
+# Codecs
+#########
 gst-plugins-bad
 gst-plugins-base
 gst-plugins-good
@@ -139,16 +163,22 @@ libdvdnav
 gst-libav
 flashplugin
 
-## Lightdm Login Manager
+########################
+# Lightdm Login Manager
+########################
 lightdm
 lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 
-## Virtualbox Guest Additions
+#############################
+# Virtualbox Guest Additions
+#############################
 virtualbox-guest-dkms
 virtualbox-guest-utils
 
-## Software
+###########
+# Software
+###########
 gnome-keyring
 light-locker
 network-manager-applet
@@ -165,7 +195,9 @@ transmission-gtk
 vlc
 simple-scan
 
-## Common Desktop Environment
+#############################
+# Common Desktop Environment
+#############################
 accountsservice
 ffmpegthumbnailer
 ffmpegthumbs
@@ -180,16 +212,22 @@ xapps
 ncdu
 volumeicon
 
-## Theme
-materia-namib-gtk-theme
+#########
+# Theme
+#########
+materia-gtk-theme
 papirus-icon-theme
 
-## Theme engine
+###############
+# Theme engine
+###############
 qt5-styleplugins
 gtk-engines
 gtk-engine-murrine
 
-## Printer Support
+##################
+# Printer Support
+##################
 cups
 cups-pk-helper
 gsfonts
@@ -206,7 +244,9 @@ foomatic-db-nonfree
 foomatic-db-nonfree-ppds
 foomatic-db-ppds
 
-## Language pack
+################
+# Language pack
+################
 qt5-translations
 firefox-i18n-en-us
 aspell-en
@@ -215,26 +255,11 @@ hunspell-en_US
 hyphen-en
 libreoffice-fresh-en-gb
 
-## From Namib Repository
-namib-config-system
-namib-base-skel
-namib-keyring
-namib-mirrorlist
-namib-settings-manager
-nhwd
-nhwd-db
-
-## Calamares Installer
-python-urllib3
-ckbcomp
-calamares
-
 ######################
 ## ArchISO Specific ##
 ######################
 arch-install-scripts
 b43-fwcutter
-broadcom-wl
 btrfs-progs
 clonezilla
 crda

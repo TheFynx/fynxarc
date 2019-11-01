@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Deathstar</name>
+      <filename>/usr/share/backgrounds/fynx/1801.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Hal</name>
+      <filename>/usr/share/backgrounds/fynx/1802.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+   
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Imperial</name>
+      <filename>/usr/share/backgrounds/fynx/1803.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Minimal Deathstar</name>
+      <filename>/usr/share/backgrounds/fynx/1804.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Coffee</name>
+      <filename>/usr/share/backgrounds/fynx/1805.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Space</name>
+      <filename>/usr/share/backgrounds/fynx/1806.jpg</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Mountains</name>
+      <filename>/usr/share/backgrounds/fynx/1807.jpg</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux Falcon</name>
+      <filename>/usr/share/backgrounds/fynx/1808.jpg</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+
+   <wallpaper deleted="false">
+      <name>FynxArc GNU/Linux NES</name>
+      <filename>/usr/share/backgrounds/fynx/1809.png</filename>
+      <options>zoom</options>
+      <pcolor>#ffffff</pcolor>
+      <scolor>#000000</scolor>
+   </wallpaper>
+</wallpapers>

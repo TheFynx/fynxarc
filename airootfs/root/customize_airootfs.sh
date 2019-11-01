@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USER="liveuser"
-OSNAME="Namib"
+OSNAME="FynxArc"
 
 function initFunc() {
 	set -e -u
@@ -29,7 +29,7 @@ function setDefaultsFunc() {
 	echo "BROWSER=/usr/bin/${_BROWSER}" >> /etc/profile
 
 	## Set Nano Editor
-	export _EDITOR=nano
+	export _EDITOR=nvim
 	echo "EDITOR=${_EDITOR}" >> /etc/environment
 	echo "EDITOR=${_EDITOR}" >> /etc/profile
 
@@ -42,8 +42,6 @@ function setDefaultsFunc() {
 
 function initkeysFunc() {
 	## Setup Pacman
-	pacman-key --init namib
-	pacman-key --populate namib
 	pacman-key --init archlinux
 	pacman-key --populate archlinux
 }
@@ -70,15 +68,6 @@ function enableServicesFunc() {
 	systemctl -fq enable NetworkManager.service
 	systemctl mask systemd-rfkill@.service
 	systemctl set-default graphical.target
-}
-
-function enableCalamaresAutostartFunc() {
-	## Enable Calamares Autostart
-	mkdir -p /home/liveuser/Desktop
-	cp /usr/share/applications/calamares.desktop /home/liveuser/Desktop/calamares.desktop
-	chmod +rx /home/liveuser/Desktop/calamares.desktop
-	chown liveuser /home/liveuser/Desktop/calamares.desktop
-	chown liveuser /home/liveuser/Desktop/
 }
 
 function fixWifiFunc() {
@@ -120,7 +109,7 @@ function editOrCreateConfigFilesFunc() {
 	echo "FONT=" >> /etc/vconsole.conf
 
 	## Hostname
-	echo "namib" > /etc/hostname
+	echo "fynxarc" > /etc/hostname
 
 	sed -i "s/#Server/Server/g" /etc/pacman.d/mirrorlist
 	sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
@@ -142,7 +131,6 @@ editOrCreateConfigFilesFunc
 configRootUserFunc
 createLiveUserFunc
 setDefaultsFunc
-enableCalamaresAutostartFunc
 enableServicesFunc
 fontFix
 fixWifiFunc
