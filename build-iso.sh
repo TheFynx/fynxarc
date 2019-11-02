@@ -246,6 +246,8 @@ make_efiboot() {
 
 # Build airootfs filesystem image
 make_prepare() {
+    sleep 3
+    umount ./work/x86_64/airootfs/proc || true
     cp -a -l -f ${work_dir}/x86_64/airootfs ${work_dir}
     mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" pkglist
     mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" ${gpg_key:+-g ${gpg_key}} prepare

@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 # Set -E on bluetooth
